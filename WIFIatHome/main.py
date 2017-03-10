@@ -137,10 +137,31 @@ class manager(object):
 
         self._threadObj.run()
 
+#### simple manager
 
+from module.tempfile import tempfile
+from system.wifi import wifi
 
+class managerSimple(object):
+
+    def __init__(self,cfgFile='config.cfg'):
+        self._cfgFile = cfgFile
+
+    def readConfig(self):
+        temp = tempfile(self._cfgFile)
+        self._config = temp.openfile()
+
+        print('Read Configuration', self._config.get('COMMUNICATION', None))
+        self._cfgCommIf = self._config.get('COMMUNICATION', None)
+        self._cfgGpio = self._config.get('GPIO', None)
+        self._cfgSystem = self._config.get('SYSTEM', None)
+
+    def startNetwork(self):
+        self.nic = wifi(self._cfgCommIf.get('SSID',None),self._cfgCommIf.get('PASSWD'))
+
+    def startCommIf(self):
 
 if __name__ == '__main__':
 	
-    mgr = manager('config.cfg')
+    mgr = managerSimple('config.cfg')
     mgr.startSystem()
